@@ -1,0 +1,66 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data = pd.read_csv("country_data.csv")
+print(data)
+
+life_expectancy = data['Life Expectancy']
+#print(life_expectancy)
+
+life_expectancy_quartiles=np.quantile(life_expectancy, [0.25, 0.5, 0.75])
+#print(life_expectancy_quartiles)
+malaysia = 73.75625000000002
+plt.hist(life_expectancy)
+plt.axvline(x=life_expectancy_quartiles[0], ymin=0, ymax=1, linestyle='dotted', color='red', label='25% Percentile')
+plt.axvline(x=life_expectancy_quartiles[1], ymin=0, ymax=1, linestyle='dotted', color='red', label='50% Percentile')
+plt.axvline(x=life_expectancy_quartiles[2], ymin=0, ymax=1, linestyle='dotted', color='red', label='75% Percentile')
+plt.axvline(x=malaysia, ymin=0, ymax=1, linestyle='dotted', color='gold', label='Malaysia')
+plt.legend()
+plt.xlabel('Age')
+plt.ylabel('Count')
+plt.show()
+plt.close()
+
+gdp = data['GDP']
+#print(gdp)
+median_gdp = np.median(gdp)
+print(f'GDP median: {median_gdp}')
+low_gdp = data[data['GDP'] <= median_gdp]
+high_gdp = data[data['GDP'] >= median_gdp]
+
+low_gdp_quartiles = np.quantile(low_gdp['Life Expectancy'], [0.25, 0.5, 0.75])
+print(low_gdp_quartiles)
+high_gdp_quartiles = np.quantile(high_gdp['Life Expectancy'], [0.25, 0.5, 0.75])
+print(high_gdp_quartiles)
+
+#GDP effect Life expectancy using bar 
+plt.hist(x=low_gdp['Life Expectancy'], label= 'Low GDP', histtype='step', color='blue')
+plt.hist(x=high_gdp['Life Expectancy'], label='High GDP', histtype='step', color='firebrick')
+plt.axvline(x=low_gdp_quartiles[0], ymin=0, ymax=1, linestyle='dotted', color='cornflowerblue', label='25% Percentile (Low)')
+plt.axvline(x=low_gdp_quartiles[1], ymin=0, ymax=1, linestyle='dotted', color='cornflowerblue', label='50% Percentile (Low)')
+plt.axvline(x=low_gdp_quartiles[2], ymin=0, ymax=1, linestyle='dotted', color='cornflowerblue', label='75% Percentile (Low)')
+plt.axvline(x=high_gdp_quartiles[0], ymin=0, ymax=1, linestyle='dotted', color='red', label='25% Percentile (High)')
+plt.axvline(x=high_gdp_quartiles[1], ymin=0, ymax=1, linestyle='dotted', color='red', label='50% Percentile (High)')
+plt.axvline(x=high_gdp_quartiles[2], ymin=0, ymax=1, linestyle='dotted', color='red', label='75% Percentile (High)')
+plt.title('Impact Country GDP on Life Expectancy')
+plt.xlabel('Life Expectancy')
+plt.ylabel('GDP')
+plt.legend()
+plt.show()
+plt.close()
+#scatter
+plt.scatter(x=low_gdp['Life Expectancy'], y=low_gdp['GDP'], label='Low GDP', color='royalblue', alpha=0.8)
+plt.scatter(x=high_gdp['Life Expectancy'], y=high_gdp['GDP'], label='High GDP', color='pink', alpha=0.8)
+plt.title('Impact Country GDP on Life Expectancy')
+plt.xlabel('Life Expectancy')
+plt.ylabel('GDP')
+plt.legend()
+plt.grid(color='grey', linestyle='-', linewidth=0.8, alpha=0.2)
+plt.show()
+plt.close()
+
+low_gdp_country = low_gdp['Country']
+high_gdp_country = high_gdp['Country']
+print(low_gdp_country)
+print(high_gdp_country)
